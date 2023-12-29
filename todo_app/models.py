@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 
 
-class TodoTask(models.Model):
+class TodoTaskModel(models.Model):
     id = models.BigAutoField(primary_key=True)
 
     # Used to hide internal id in requests
@@ -15,6 +15,8 @@ class TodoTask(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = "todo_task"
+
         unique_together = [
             ["uuid"],
         ]

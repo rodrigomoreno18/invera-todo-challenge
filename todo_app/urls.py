@@ -4,4 +4,5 @@ from todo_app import views
 
 
 urlpatterns = [
+    path("", views.TodoTaskView.as_view())
 ]
