@@ -1,5 +1,9 @@
 from django.http import HttpRequest, HttpResponse
+from django import views
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("Hello world!")
+class TodoTaskView(views.View):
+    def get(self, request: HttpRequest) -> HttpResponse:
+        task_id = request.GET["id"]
+
+        
