@@ -6,26 +6,15 @@ from todo_app.tasks.api import TodoTaskAPI
 from todo_app.tasks.repository import TodoTaskRepository
 
 
-class TodoTaskView(APIView):
+class TodoTasksView(APIView):
     def get(self, request: Request) -> Response:
-        task_uuid = request.query_params.get("id")
-
         task_api = TodoTaskAPI.build()
-
-        if task_uuid is None:
-            tasks = task_api.list_tasks()
-            return Response(
-                status=status.HTTP_200_OK, data=[task.as_dict() for task in tasks]
-            )
-
-        task = task_api.get_task(task_uuid)
-        if task is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-    
+        
+        tasks = task_api.list_tasks()
         return Response(
-            dict(uuid=task.uuid, title=task.title, description=task.description, is_done=task.is_done)
+            status=status.HTTP_200_OK, data=[task.as_dict() for task in tasks]
         )
-    
+
     def post(self, request: Request) -> Response:
         serializer = TodoTaskSerializer(data=request.data)
         
@@ -40,12 +29,30 @@ class TodoTaskView(APIView):
             data=task.as_dict(),
         )
 
-    def delete(self, request: Request) -> Response:
-        task_uuid = request.query_params.get("id")
 
-        if task_uuid is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+class TodoTaskView(APIView):
+    def get(self, request: Request, task_uuid: str) -> Response:
+        task_api = TodoTaskAPI.build()
+
+        task = task_api.get_task(task_uuid)
+        if task is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
     
+        return Response(
+            dict(uuid=task.uuid, title=task.title, description=task.description, is_done=task.is_done)
+        )
+
+    def patch(self, request: Request, task_uuid: str) -> Response:
+        task_api = TodoTaskAPI.build()
+
+        if request.query_params.get("is_done", False):
+            marked_completed = task_api.mark_completed(task_uuid)
+            return Response(status=status.HTTP_200_OK, data=dict(updated=marked_completed))
+
+        return Response(status=status.HTTP_200_OK, data=dict(updated=False))
+
+
+    def delete(self, request: Request, task_uuid: str) -> Response:
         task_api = TodoTaskAPI.build()
 
         was_deleted = task_api.delete_task(task_uuid)

@@ -50,6 +50,10 @@ class TodoTaskAPI:
             is_done=task.is_done,
         )
 
+    def mark_completed(self, task_uuid: str) -> bool:
+        marked_completed = self._repository.mark_completed_by_uuid(task_uuid)
+        return marked_completed
+
     def delete_task(self, task_uuid: str) -> bool:
         return self._repository.delete_task_by_uuid(task_uuid)
 

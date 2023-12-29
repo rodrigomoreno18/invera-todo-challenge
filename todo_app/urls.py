@@ -4,5 +4,6 @@ from todo_app import views
 
 
 urlpatterns = [
-    path("", views.TodoTaskView.as_view())
+    path("", views.TodoTasksView.as_view()),
+    path("<uuid:task_uuid>/", views.TodoTaskView.as_view()),
 ]
