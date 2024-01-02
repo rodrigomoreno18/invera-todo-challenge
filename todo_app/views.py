@@ -10,7 +10,7 @@ class TodoTasksView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-        task_api = TodoTaskAPI.build()
+        task_api = TodoTaskAPI.build(request.user.id)
 
         created_at_filter = request.query_params.get("created_at")
         content_filter = request.query_params.get("includes")
@@ -29,7 +29,7 @@ class TodoTasksView(APIView):
         serializer.is_valid(raise_exception=True)
         task_data = serializer.validated_data
 
-        task_api = TodoTaskAPI.build()
+        task_api = TodoTaskAPI.build(request.user.id)
         task = task_api.create_task(task_data["title"], task_data["description"])
 
         return Response(
@@ -39,8 +39,10 @@ class TodoTasksView(APIView):
 
 
 class TodoTaskView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request: Request, task_uuid: str) -> Response:
-        task_api = TodoTaskAPI.build()
+        task_api = TodoTaskAPI.build(request.user.id)
 
         task = task_api.get_task(task_uuid)
         if task is None:
@@ -51,7 +53,7 @@ class TodoTaskView(APIView):
         )
 
     def patch(self, request: Request, task_uuid: str) -> Response:
-        task_api = TodoTaskAPI.build()
+        task_api = TodoTaskAPI.build(request.user.id)
 
         if request.query_params.get("is_done", False):
             marked_completed = task_api.mark_completed(task_uuid)
@@ -61,7 +63,7 @@ class TodoTaskView(APIView):
 
 
     def delete(self, request: Request, task_uuid: str) -> Response:
-        task_api = TodoTaskAPI.build()
+        task_api = TodoTaskAPI.build(request.user.id)
 
         was_deleted = task_api.delete_task(task_uuid)
         if was_deleted:

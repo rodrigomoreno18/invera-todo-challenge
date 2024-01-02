@@ -8,6 +8,8 @@ class TodoTaskModel(models.Model):
     # Used to hide internal id in requests
     uuid = models.UUIDField(default=uuid.uuid4)
 
+    user_id = models.PositiveIntegerField(null=False)
+
     title = models.CharField(max_length=256, null=False)
     description = models.TextField()
     is_done = models.BooleanField(default=False)
@@ -18,8 +20,10 @@ class TodoTaskModel(models.Model):
         db_table = "todo_task"
 
         unique_together = [
-            ["uuid"],
+            ["user_id", "uuid"],
         ]
         indexes = [
-            models.Index(fields=["is_done"], name="is_done_idx"),
+            models.Index(fields=["user_id", "is_done"], name="is_done_idx"),
+            models.Index(fields=["user_id", "created_at"], name="created_at_idx"),
+            # TODO: check if title/description should use an index (given we can filter by content)
         ]

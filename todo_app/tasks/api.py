@@ -74,5 +74,5 @@ class TodoTaskAPI:
         ]
 
     @classmethod
-    def build(cls) -> TodoTaskAPI:
-        return TodoTaskAPI(task_repository=TodoTaskRepository())
+    def build(cls, user_id: int) -> TodoTaskAPI:
+        return TodoTaskAPI(task_repository=TodoTaskRepository(user_id))

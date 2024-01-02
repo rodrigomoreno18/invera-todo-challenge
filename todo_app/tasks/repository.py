@@ -5,28 +5,31 @@ from django.db.models import Q
 
 
 class TodoTaskRepository:
+    def __init__(self, user_id: int) -> None:
+        self._user_id = user_id
+
     def retrieve_task_by_uuid(self, uuid_str: str) -> TodoTaskModel | None:
-        tasks = TodoTaskModel.objects.filter(uuid=uuid_str)
+        tasks = TodoTaskModel.objects.filter(user_id=self._user_id, uuid=uuid_str)
 
         return next(iter(tasks), None)
 
     def delete_task_by_uuid(self, uuid_str: str) -> bool:
-        deleted = TodoTaskModel.objects.filter(uuid=uuid_str).delete()
+        deleted = TodoTaskModel.objects.filter(user_id=self._user_id, uuid=uuid_str).delete()
         return deleted[0] > 0
 
     def mark_completed_by_uuid(self, uuid_str: str) -> bool:
-        updated_count = TodoTaskModel.objects.filter(uuid=uuid_str).update(is_done=True)
+        updated_count = TodoTaskModel.objects.filter(user_id=self._user_id, uuid=uuid_str).update(is_done=True)
         return updated_count > 0
 
     def create_task(self, title: str, description: str) -> TodoTaskModel:
-        task = TodoTaskModel(title=title, description=description)
+        task = TodoTaskModel(user_id=self._user_id, title=title, description=description)
         task.save()
         return task
 
     def list_tasks(
         self, created_date: datetime | None = None, content_filter: str | None = None
     ) -> list[TodoTaskModel]:
-        queryset = TodoTaskModel.objects.all()
+        queryset = TodoTaskModel.objects.filter(user_id=self._user_id)
 
         if created_date is not None:
             queryset = queryset.filter(
