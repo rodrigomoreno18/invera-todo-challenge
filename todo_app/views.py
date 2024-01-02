@@ -1,16 +1,20 @@
-from django.http import HttpRequest, JsonResponse
 from rest_framework.views import APIView, Request, Response, status
 from todo_app.serializers import TodoTaskSerializer
 from todo_app.tasks.api import TodoTaskAPI
-
-from todo_app.tasks.repository import TodoTaskRepository
+from utils.time import parse_datetime
 
 
 class TodoTasksView(APIView):
     def get(self, request: Request) -> Response:
         task_api = TodoTaskAPI.build()
+
+        created_at_filter = request.query_params.get("created_at")
+        content_filter = request.query_params.get("includes")
+
+        if created_at_filter is not None:
+            created_at_filter = parse_datetime(created_at_filter)
         
-        tasks = task_api.list_tasks()
+        tasks = task_api.list_tasks(created_date=created_at_filter, content_filter=content_filter)
         return Response(
             status=status.HTTP_200_OK, data=[task.as_dict() for task in tasks]
         )

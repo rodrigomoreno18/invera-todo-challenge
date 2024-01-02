@@ -57,7 +57,9 @@ class TodoTaskAPI:
     def delete_task(self, task_uuid: str) -> bool:
         return self._repository.delete_task_by_uuid(task_uuid)
 
-    def list_tasks(self) -> list[TodoTask]:
+    def list_tasks(
+        self, created_date: datetime | None = None, content_filter: str | None = None
+    ) -> list[TodoTask]:
         return [
             TodoTask(
                 uuid=task.uuid,
@@ -66,7 +68,7 @@ class TodoTaskAPI:
                 created_at=task.created_at,
                 is_done=task.is_done,
             )
-            for task in self._repository.list_tasks()
+            for task in self._repository.list_tasks(created_date=created_date, content_filter=content_filter)
         ]
 
     @classmethod

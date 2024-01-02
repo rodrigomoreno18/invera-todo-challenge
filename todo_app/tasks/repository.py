@@ -1,5 +1,7 @@
+from datetime import datetime
 import uuid
 from todo_app.models import TodoTaskModel
+from django.db.models import Q
 
 
 class TodoTaskRepository:
@@ -22,5 +24,21 @@ class TodoTaskRepository:
         task.save()
         return task
 
-    def list_tasks(self) -> list[TodoTaskModel]:
-        return TodoTaskModel.objects.all()
+    def list_tasks(
+        self, created_date: datetime | None = None, content_filter: str | None = None
+    ) -> list[TodoTaskModel]:
+        queryset = TodoTaskModel.objects.all()
+
+        if created_date is not None:
+            queryset = queryset.filter(
+                created_at__year=created_date.year,
+                created_at__month=created_date.month,
+                created_at__day=created_date.day,
+            )
+        
+        if content_filter is not None:
+            queryset = queryset.filter(
+                Q(title__contains=content_filter) | Q(description__contains=content_filter)
+            )
+        
+        return list(queryset)
