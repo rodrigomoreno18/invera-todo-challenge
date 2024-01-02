@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from datetime import datetime
 from todo_app.tasks.repository import TodoTaskRepository
@@ -72,5 +74,5 @@ class TodoTaskAPI:
         ]
 
     @classmethod
-    def build(cls):
+    def build(cls) -> TodoTaskAPI:
         return TodoTaskAPI(task_repository=TodoTaskRepository())

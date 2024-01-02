@@ -1,10 +1,14 @@
 from rest_framework.views import APIView, Request, Response, status
+from rest_framework.permissions import IsAuthenticated
+
 from todo_app.serializers import TodoTaskSerializer
 from todo_app.tasks.api import TodoTaskAPI
 from utils.time import parse_datetime
 
 
 class TodoTasksView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request: Request) -> Response:
         task_api = TodoTaskAPI.build()
 

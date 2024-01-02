@@ -12,7 +12,6 @@ class TodoTaskRepository:
 
     def delete_task_by_uuid(self, uuid_str: str) -> bool:
         deleted = TodoTaskModel.objects.filter(uuid=uuid_str).delete()
-        print(f"deleted: {deleted}")
         return deleted[0] > 0
 
     def mark_completed_by_uuid(self, uuid_str: str) -> bool:
