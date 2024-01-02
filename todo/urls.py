@@ -17,10 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from rest_framework.authtoken import views
+from rest_framework.authtoken import views as authtoken_views
+
+from todo.views import signup
+
 
 urlpatterns = [
     path("todo/", include("todo_app.urls")),
     path("admin/", admin.site.urls),
-    path("login/", views.obtain_auth_token),
+    path("login/", authtoken_views.obtain_auth_token),
+    path("signup/", signup)
 ]
