@@ -18,7 +18,9 @@ class TodoTaskRepository:
         return deleted[0] > 0
 
     def mark_completed_by_uuid(self, uuid_str: str) -> bool:
-        updated_count = TodoTaskModel.objects.filter(user_id=self._user_id, uuid=uuid_str).update(is_done=True)
+        updated_count = TodoTaskModel.objects.filter(user_id=self._user_id, uuid=uuid_str).update(
+            is_done=True
+        )
         return updated_count > 0
 
     def create_task(self, title: str, description: str) -> TodoTaskModel:

@@ -49,7 +49,9 @@ class TodoTaskView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
     
         return Response(
-            dict(uuid=task.uuid, title=task.title, description=task.description, is_done=task.is_done)
+            dict(
+                uuid=task.uuid, title=task.title, description=task.description, is_done=task.is_done
+            )
         )
 
     def patch(self, request: Request, task_uuid: str) -> Response:
