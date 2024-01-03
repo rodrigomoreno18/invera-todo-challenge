@@ -46,7 +46,7 @@ class TodoTaskView(APIView):
 
         task = task_api.get_task(task_uuid)
         if task is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND, data=dict(id=task_uuid))
     
         return Response(
             dict(
