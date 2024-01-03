@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from todo_app.serializers import TodoTaskSerializer
 from todo_app.tasks.api import TodoTaskAPI
-from utils.time import parse_datetime
+from utils.time import parse_utc_datetime
 
 
 class TodoTasksView(APIView):
@@ -16,7 +16,7 @@ class TodoTasksView(APIView):
         content_filter = request.query_params.get("includes")
 
         if created_at_filter is not None:
-            created_at_filter = parse_datetime(created_at_filter)
+            created_at_filter = parse_utc_datetime(created_at_filter)
         
         tasks = task_api.list_tasks(created_date=created_at_filter, content_filter=content_filter)
         return Response(
