@@ -70,7 +70,9 @@ class TodoTaskAPI:
                 created_at=task.created_at,
                 is_done=task.is_done,
             )
-            for task in self._repository.list_tasks(created_date=created_date, content_filter=content_filter)
+            for task in self._repository.list_tasks(
+                created_date=created_date, content_filter=content_filter
+            )
         ]
 
     @classmethod

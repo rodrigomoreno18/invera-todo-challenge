@@ -9,10 +9,10 @@ def signup(request: Request) -> Response:
     email = request.data.get("email", None)
     password = request.data.get("password", None)
 
-    if any(value is None for value in [username, email, password]):
+    if username is None or password is None:
         return Response(
             status=status.HTTP_400_BAD_REQUEST,
-            data=dict(message="username, email and password must be provided"),
+            data=dict(message="username and password must be provided"),
         )
 
     user = User.objects.create_user(username=username, email=email, password=password)
