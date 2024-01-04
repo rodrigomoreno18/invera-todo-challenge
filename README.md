@@ -1,37 +1,108 @@
-# Invera ToDo-List Challenge (Python/Django Jr-SSr)
+# Invera TODO Challenge
 
-El propósito de esta prueba es conocer tu capacidad para crear una pequeña aplicación funcional en un límite de tiempo. A continuación, encontrarás las funciones, los requisitos y los puntos clave que debés tener en cuenta durante el desarrollo.
+Este proyecto implementa una simple API que permite crear y administrar tareas (TO-DO).
 
-## Qué queremos que hagas:
+Las principales funcionalidades ofrecidas son:
 
-- El Challenge consiste en crear una aplicación web sencilla que permita a los usuarios crear y mantener una lista de tareas.
-- La entrega del resultado será en un nuevo fork de este repo y deberás hacer una pequeña demo del funcionamiento y desarrollo del proyecto ante un super comité de las más grandes mentes maestras de Invera, o a un par de devs, lo que sea más fácil de conseguir.
-- Podes contactarnos en caso que tengas alguna consulta.
+- Crear una cuenta con usuario y contraseña
+- Iniciar sesión
+- Crear tareas con título y descripción
+- Listar tareas, opcionalmente filtrando por día y/o por contenido de las mismas
+- Eliminar tareas
+- Marcar tareas como completas
 
-## Objetivos:
+## Inicio rápido
 
-El usuario de la aplicación tiene que ser capaz de:
+```bash
+# Clonar el repositorio
+. $ git clone git@github.com:rodrigomoreno18/invera-todo-challenge.git
 
-- Autenticarse
-- Crear una tarea
-- Eliminar una tarea
-- Marcar tareas como completadas
-- Poder ver una lista de todas las tareas existentes
-- Filtrar/buscar tareas por fecha de creación y/o por el contenido de la misma
+# Entrar al directorio
+. $ cd invera-todo-challenge
 
-## Qué evaluamos:
+# Armar la imagen
+invera-todo-challenge $ docker build . -t invera-todo
 
-- Desarrollo utilizando Python, Django. No es necesario crear un Front-End, pero sí es necesario tener una API que permita cumplir con los objetivos de arriba.
-- Uso de librerías y paquetes estandares que reduzcan la cantidad de código propio añadido.
-- Calidad y arquitectura de código. Facilidad de lectura y mantenimiento del código. Estándares seguidos.
-- [Bonus] Manejo de logs.
-- [Bonus] Creación de tests (unitarias y de integración)
-- [Bonus] Unificar la solución propuesta en una imagen de Docker por repositorio para poder ser ejecutada en cualquier ambiente (si aplica para full stack).
+# Iniciar la app
+invera-todo-challenge $ docker run --rm -it -p 8000:8000 --name invera_todo -d invera-todo
 
-## Requerimientos de entrega:
+# Aplicar migraciones
+invera-todo-challenge $ docker exec -it invera_todo python manage.py migrate
+```
 
-- Hacer un fork del proyecto y pushearlo en github. Puede ser privado.
-- La solución debe correr correctamente.
-- El Readme debe contener todas las instrucciones para poder levantar la aplicación, en caso de ser necesario, y explicar cómo se usa.
-- Disponibilidad para realizar una pequeña demo del proyecto al finalizar el challenge.
-- Tiempo para la entrega: Aproximadamente 7 días.
+### API
+
+> (Ejemplos usando cURL)
+
+```bash
+# signup: POST /signup/
+curl http://localhost:8000/signup/ \
+-d username=<your_user_name>
+-d password=<your_password>
+-d email=<your_email> # (optional)
+```
+
+```bash
+# login: POST /login/
+curl http://localhost:8000/login/ \
+-d username=<your_user_name>
+-d password=<your_password>
+
+Response:
+{
+    "token": string
+}
+```
+
+```bash
+# list tasks: GET /todo/
+curl http://localhost:8000/todo/
+-H "Authorization: Token <auth-token>"
+--url-query "created_at=<YYYY-MM-DD>" # (optional)
+--url-query "includes=<some_text>" # (optional)
+
+Response:
+[
+    {
+        "uuid": string,
+        "title": string,
+        "description": string,
+        "created_at": string date,
+        "is_done": boolean
+    },
+    ...
+]
+```
+
+```bash
+# get task: GET /todo/:uuid/
+curl http://localhost:8000/todo/:uuid/
+-H "Authorization: Token <auth-token>"
+
+Response:
+{
+    "uuid": string,
+    "title": string,
+    "description": string,
+    "created_at": string date,
+    "is_done": boolean
+}
+```
+
+```bash
+# delete task: DELETE /todo/:uuid/
+curl -X DELETE http://localhost:8000/todo/:uuid/
+-H "Authorization: Token <auth-token>"
+```
+
+```bash
+# mark task as completed: PATCH /todo/:uuid/
+curl -X PATCH http://localhost:8000/todo/:uuid/
+-H "Authorization: Token <auth-token>"
+--url-query is_done=true
+
+Response:
+{
+    "updated": boolean
+}
+```
