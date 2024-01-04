@@ -37,15 +37,15 @@ invera-todo-challenge $ docker exec -it invera_todo python manage.py migrate
 ```bash
 # signup: POST /signup/
 curl http://localhost:8000/signup/ \
--d username=<your_user_name>
--d password=<your_password>
+-d username=<your_user_name> \
+-d password=<your_password> \
 -d email=<your_email> # (optional)
 ```
 
 ```bash
 # login: POST /login/
 curl http://localhost:8000/login/ \
--d username=<your_user_name>
+-d username=<your_user_name> \
 -d password=<your_password>
 
 Response:
@@ -56,9 +56,9 @@ Response:
 
 ```bash
 # list tasks: GET /todo/
-curl http://localhost:8000/todo/
--H "Authorization: Token <auth-token>"
---url-query "created_at=<YYYY-MM-DD>" # (optional)
+curl http://localhost:8000/todo/ \
+-H "Authorization: Token <auth-token>" \
+--url-query "created_at=<YYYY-MM-DD>" \ # (optional)
 --url-query "includes=<some_text>" # (optional)
 
 Response:
@@ -76,7 +76,7 @@ Response:
 
 ```bash
 # get task: GET /todo/:uuid/
-curl http://localhost:8000/todo/:uuid/
+curl http://localhost:8000/todo/:uuid/ \
 -H "Authorization: Token <auth-token>"
 
 Response:
@@ -91,14 +91,14 @@ Response:
 
 ```bash
 # delete task: DELETE /todo/:uuid/
-curl -X DELETE http://localhost:8000/todo/:uuid/
+curl -X DELETE http://localhost:8000/todo/:uuid/ \
 -H "Authorization: Token <auth-token>"
 ```
 
 ```bash
 # mark task as completed: PATCH /todo/:uuid/
-curl -X PATCH http://localhost:8000/todo/:uuid/
--H "Authorization: Token <auth-token>"
+curl -X PATCH http://localhost:8000/todo/:uuid/ \
+-H "Authorization: Token <auth-token>" \
 --url-query is_done=true
 
 Response:
