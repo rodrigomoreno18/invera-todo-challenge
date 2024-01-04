@@ -24,7 +24,7 @@ Las principales funcionalidades ofrecidas son:
 invera-todo-challenge $ docker build . -t invera-todo
 
 # Iniciar la app
-invera-todo-challenge $ docker run --rm -it -p 8000:8000 --name invera_todo -d invera-todo
+invera-todo-challenge $ docker run -it -p 8000:8000 --name invera_todo -d invera-todo
 
 # Aplicar migraciones
 invera-todo-challenge $ docker exec -it invera_todo python manage.py migrate
@@ -33,7 +33,7 @@ invera-todo-challenge $ docker exec -it invera_todo python manage.py migrate
 ### Tests
 
 ```bash
-invera-todo-challenge $ docker run --rm -it invera_todo python manage.py test
+invera-todo-challenge $ docker run -it invera-todo python manage.py test
 ```
 
 ### API
