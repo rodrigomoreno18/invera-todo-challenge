@@ -30,6 +30,12 @@ invera-todo-challenge $ docker run --rm -it -p 8000:8000 --name invera_todo -d i
 invera-todo-challenge $ docker exec -it invera_todo python manage.py migrate
 ```
 
+### Tests
+
+```bash
+invera-todo-challenge $ docker run --rm -it invera_todo python manage.py test
+```
+
 ### API
 
 > (Ejemplos usando cURL)
