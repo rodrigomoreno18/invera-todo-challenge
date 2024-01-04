@@ -7,6 +7,8 @@ from todo_app.tasks.repository import TodoTaskRepository
 
 @dataclass
 class TodoTask:
+    """Agnostic representation of a TO-DO task."""
+    
     uuid: str
     title: str
     description: str
@@ -28,6 +30,10 @@ class TodoTaskAPI:
         self._repository = task_repository
 
     def get_task(self, task_uuid: str) -> TodoTask | None:
+        """Gets a task by UUID.
+        
+        Returns None if the task is not found.
+        """
         task = self._repository.retrieve_task_by_uuid(task_uuid)
 
         if task is None:
@@ -42,6 +48,10 @@ class TodoTaskAPI:
         )
 
     def create_task(self, title: str, description: str) -> TodoTask:
+        """Creates a task with the given title and description.
+        
+        Returns the newly-created task.
+        """
         task = self._repository.create_task(title, description)
 
         return TodoTask(
@@ -53,15 +63,25 @@ class TodoTaskAPI:
         )
 
     def mark_completed(self, task_uuid: str) -> bool:
+        """Marks a task as completed.
+        
+        It returns whether a task was marked completed.
+        """
         marked_completed = self._repository.mark_completed_by_uuid(task_uuid)
         return marked_completed
 
     def delete_task(self, task_uuid: str) -> bool:
+        """Deletes a task by UUID.
+        
+        Returns whether a task was deleted.
+        """
         return self._repository.delete_task_by_uuid(task_uuid)
 
     def list_tasks(
         self, created_date: datetime | None = None, content_filter: str | None = None
     ) -> list[TodoTask]:
+        """Lists tasks, with optional creation date and content filters."""
+
         return [
             TodoTask(
                 uuid=task.uuid,
